@@ -1,54 +1,56 @@
+import { User, Matrix, Category, Alternative, Entry } from './connectors';
+
 const resolvers = {
     Query: {
         user(root, args) {
-            return { id: 1, firstName: 'Hello', lastName: 'World', email: 'foo@bar.com' };
+            return User.find({ where: args });
         },
         allUsers() {
-            return [{ id: 1, firstName: 'Hello', lastName: 'World', email: 'foo@bar.com' }];
+            return User.findAll();
         },
         matrix(root, args) {
-            return { id: 1, title: 'Matrix1' };
+            return Matrix.find({ where: args });
         },
         category(root, args) {
-            return { id: 1, title: 'Category1', sorting: 0, weight: 100 };
+            return Category.find({ where: args });
         },
         alternative(root, args) {
-            return { id: 1, title: 'Alternative1', sorting: 0 };
+            return Alternative.find({ where: args });
         },
         entry(root, args) {
-            return { id: 1, title: 'Entry1' };
+            return Entry.find({ where: args });
         }
     },
     Matrix: {
         creator(matrix) {
-            return { id: 1, firstName: 'Hello', lastName: 'World', email: 'foo@bar.com' };
+            return matrix.creator;
         },
         categories(matrix) {
-            return [{ id: 1, title: 'Category1', sorting: 0, weight: 100  }];
+            return matrix.categories;
         },
         alternatives(matrix) {
-            return [{ id: 1, title: 'Alternative1', sorting: 0 }];
+            return matrix.alternatives;
         }
     },
     Category: {
         creator(category) {
-            return { id: 1, firstName: 'Hello', lastName: 'World', email: 'foo@bar.com' };
+            return category.creator;
         }
     },
     Alternative: {
         creator(alternative) {
-            return { id: 1, firstName: 'Hello', lastName: 'World', email: 'foo@bar.com' };
+            return alternative.creator;
         }
     },
     Entry: {
         author(entry) {
-            return { id: 1, firstName: 'Hello', lastName: 'World', email: 'foo@bar.com' };
+            return entry.author;
         },
         category(entry) {
-            return { id: 1, title: 'Category1', sorting: 0, weight: 100 };
+            return entry.category;
         },
         alternative(entry) {
-            return { id: 1, title: 'Alternative1', sorting: 0 };
+            return entry.alternative;
         }
     }
 };
