@@ -1,7 +1,7 @@
 {
-  "name": "kit",
+  "name": "decix_backend",
   "version": "1.0.0",
-  "description": "Starting point for the Apollo GraphQL Server tutorial.",
+  "description": "NodeJS backend for DECIX",
   "main": "server.js",
   "dependencies": {
     "apollo-server-express": "^1.3.0",
@@ -31,12 +31,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/apollographql/apollo-tutorial-kit.git"
+    "url": "git+https://github.com/StegSchreck/decix_backend.git"
   },
-  "author": "",
-  "license": "MIT",
+  "author": "Sebastian Schreck <sebastian.schreck@stegschreck.de>",
+  "license": "GNU GENERAL PUBLIC LICENSE",
   "bugs": {
-    "url": "https://github.com/apollographql/apollo-tutorial-kit/issues"
+    "url": "https://github.com/StegSchreck/decix_backend/issues"
   },
-  "homepage": "https://github.com/apollographql/apollo-tutorial-kit#readme"
+  "homepage": "https://github.com/StegSchreck/decix_backend"
 }
