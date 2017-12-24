@@ -1,14 +1,58 @@
 import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
-import mocks from './mocks';
+// import mocks from './mocks';
+import resolvers from './resolvers';
 
 const typeDefs = `
 type Query {
-  testString: String
+  user(firstName: String, lastName: String): User
+  allUsers: [User]
+  matrix(title: String): Matrix
+  category(title: String): Category
+  alternative(title: String): Alternative
+  entry(title: String): Entry
+}
+
+type User {
+  id: Int
+  firstName: String
+  lastName: String
+  email: String
+}
+
+type Matrix {
+  id: Int
+  title: String
+  creator: User
+  categories: [Category]
+  alternatives: [Alternative]
+}
+
+type Category {
+  id: Int
+  title: String
+  creator: User
+  sorting: Int
+  weight: Int
+}
+
+type Alternative {
+  id: Int
+  title: String
+  creator: User
+  sorting: Int
+}
+
+type Entry {
+  id: Int
+  value: String
+  author: User
+  category: Category
+  alternative: Alternative
 }
 `;
 
-const schema = makeExecutableSchema({ typeDefs });
+const schema = makeExecutableSchema({ typeDefs, resolvers });
 
-addMockFunctionsToSchema({ schema, mocks });
+// addMockFunctionsToSchema({ schema, mocks });
 
 export default schema;
