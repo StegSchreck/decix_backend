@@ -10,9 +10,9 @@ const mongo = mongoose.connect('mongodb://localhost', {
 const UserSchema = Schema({
     firstName: String,
     lastName: String,
-    email: String,
+    email: { type: String, lowercase: true },
     creationDate: { type: Date, default: Date.now },
-});
+}, { runSettersOnQuery: true });
 
 const User = mongoose.model('User', UserSchema);
 
