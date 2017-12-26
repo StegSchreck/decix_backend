@@ -3,7 +3,7 @@ import resolvers from './resolvers';
 
 const typeDefs = `
 type Query {
-  user(firstName: String, lastName: String): User
+  user(firstName: String, lastName: String, email: String): User
   allUsers: [User]
   matrix(title: String): Matrix
   category(title: String): Category
@@ -11,15 +11,19 @@ type Query {
   entry(title: String): Entry
 }
 
+type Mutation {
+  addUser(firstName: String, lastName: String, email: String): User
+}
+
 type User {
-  id: Int
+  id: String
   firstName: String
   lastName: String
   email: String
 }
 
 type Matrix {
-  id: Int
+  id: String
   title: String
   creator: User
   categories: [Category]
@@ -27,7 +31,7 @@ type Matrix {
 }
 
 type Category {
-  id: Int
+  id: String
   title: String
   creator: User
   sorting: Int
@@ -35,14 +39,14 @@ type Category {
 }
 
 type Alternative {
-  id: Int
+  id: String
   title: String
   creator: User
   sorting: Int
 }
 
 type Entry {
-  id: Int
+  id: String
   value: String
   author: User
   category: Category
