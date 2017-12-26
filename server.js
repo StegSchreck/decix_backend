@@ -6,6 +6,9 @@ import schema from './data/schema';
 const GRAPHQL_PORT = 3000;
 
 const graphQLServer = express();
+const cors = require('cors');
+
+graphQLServer.use(cors());
 
 graphQLServer.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
 graphQLServer.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
