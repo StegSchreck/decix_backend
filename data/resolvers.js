@@ -5,9 +5,6 @@ const resolvers = {
         user(root, args) {
             return User.find(args);
         },
-        allUsers() {
-            return User.find();
-        },
         matrix(root, args) {
             return Matrix.find(args);
         },
@@ -28,9 +25,18 @@ const resolvers = {
                 lastName: args.lastName,
                 email: args.email
             });
-            newUser.save(function (err) {if (err) console.log ('Error on save!')});
+            newUser.save(function (err) {
+                if (err) console.log ('Error on save!')
+            });
             return newUser;
+        },
+        deleteUser: (root, args) => {
+            let userToDelete = User.findOneAndRemove(args, function (err) {
+                if (err) console.log ('Error on delete!')
+            });
+            return "deleted";
         }
+
     },
     Matrix: {
         creator(matrix) {

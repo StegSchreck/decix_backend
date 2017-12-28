@@ -3,16 +3,16 @@ import resolvers from './resolvers';
 
 const typeDefs = `
 type Query {
-  user(firstName: String, lastName: String, email: String): User
-  allUsers: [User]
-  matrix(title: String): Matrix
-  category(title: String): Category
-  alternative(title: String): Alternative
-  entry(title: String): Entry
+  user(firstName: String, lastName: String, email: String): [User]
+  matrix(title: String): [Matrix]
+  category(title: String): [Category]
+  alternative(title: String): [Alternative]
+  entry(title: String): [Entry]
 }
 
 type Mutation {
-  addUser(firstName: String, lastName: String, email: String): User
+  addUser(firstName: String, lastName: String, email: String, password: String): User
+  deleteUser(email: String): String
 }
 
 type User {
