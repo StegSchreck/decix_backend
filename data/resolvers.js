@@ -23,7 +23,8 @@ const resolvers = {
             let newUser = new User ({
                 firstName: args.firstName,
                 lastName: args.lastName,
-                email: args.email
+                email: args.email,
+                password: args.password
             });
             newUser.save(function (err) {
                 if (err) console.log ('Error on save!')
@@ -35,8 +36,17 @@ const resolvers = {
                 if (err) console.log ('Error on delete!')
             });
             return "deleted";
+        },
+        authenticateUser: (root, args) => {
+            return User.findOne({'email':args.email}, function(err, user) {
+                if (err) throw err;
+                user.comparePassword(args.password, function (err, isMatch) {
+                    if (err) throw err;
+                    if (isMatch) return user;
+                    else return null;
+                })
+            })
         }
-
     },
     Matrix: {
         creator(matrix) {

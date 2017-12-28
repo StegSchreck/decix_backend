@@ -13,6 +13,7 @@ type Query {
 type Mutation {
   addUser(firstName: String, lastName: String, email: String, password: String): User
   deleteUser(email: String): String
+  authenticateUser(email: String, password: String): User
 }
 
 type User {
