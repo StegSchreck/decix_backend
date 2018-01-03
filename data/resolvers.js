@@ -15,8 +15,23 @@ const resolvers = {
             return Entry.find(args);
         }
     },
-    // Mutation: {
-    // },
+    Mutation: {
+        createMatrix: (root, args) => {
+            let newMatrix = new Matrix({
+                title: args.title
+            });
+            newMatrix.save(function (err) {
+                if (err) console.log ('Error on Matrix save!');
+            });
+            return newMatrix;
+        },
+        deleteMatrix: (root, args) => {
+            let matrixToDelete = Matrix.findOneAndRemove(args, function (err) {
+                if (err) console.log ('Error on Matrix deletion!');
+            });
+            return true;
+        }
+    },
     Matrix: {
         categories(matrix) {
             return matrix.categories;
