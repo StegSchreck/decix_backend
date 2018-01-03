@@ -9,8 +9,6 @@ type Query {
   entry(title: String): [Entry]
 }
 
-type Mutation {
-}
 
 type Matrix {
   id: String

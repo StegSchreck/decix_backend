@@ -15,8 +15,8 @@ const resolvers = {
             return Entry.find(args);
         }
     },
-    Mutation: {
-    },
+    // Mutation: {
+    // },
     Matrix: {
         categories(matrix) {
             return matrix.categories;
