@@ -18,8 +18,8 @@ const Matrix = mongoose.model('Matrix', MatrixSchema);
 
 const CategorySchema = Schema({
     title: String,
-    sorting: Number,
-    weight: Number,
+    sorting: { type: Number, index: { unique: true } },
+    weight: { type: Number, default: 0 },
     creationDate: { type: Date, default: Date.now },
 });
 

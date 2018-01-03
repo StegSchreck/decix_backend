@@ -26,11 +26,27 @@ const resolvers = {
             return newMatrix;
         },
         deleteMatrix: (root, args) => {
-            let matrixToDelete = Matrix.findOneAndRemove(args, function (err) {
+            Matrix.findOneAndRemove(args, function (err) {
                 if (err) console.log ('Error on Matrix deletion!');
             });
             return true;
-        }
+        },
+        createCategory: (root, args) => {
+            let newCategory = new Category({
+                title: args.title,
+                sorting: args.sorting
+            });
+            newCategory.save(function (err) {
+                if (err) console.log ('Error on Category save!');
+            });
+            return newCategory;
+        },
+        deleteCategory: (root, args) => {
+            Category.findOneAndRemove(args, function (err) {
+                if (err) console.log ('Error on Category deletion!');
+            });
+            return true;
+        },
     },
     Matrix: {
         categories(matrix) {

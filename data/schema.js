@@ -12,6 +12,8 @@ type Query {
 type Mutation {
   createMatrix(title: String): Matrix
   deleteMatrix(id: String): Boolean
+  createCategory(title: String, sorting: Int): Category
+  deleteCategory(id: String): Boolean
 }
 
 type Matrix {
