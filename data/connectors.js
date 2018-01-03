@@ -27,7 +27,7 @@ const Category = mongoose.model('Category', CategorySchema);
 
 const AlternativeSchema = Schema({
     title: String,
-    sorting: Number,
+    sorting: { type: Number, index: { unique: true } },
     creationDate: { type: Date, default: Date.now },
 });
 

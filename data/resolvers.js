@@ -47,6 +47,22 @@ const resolvers = {
             });
             return true;
         },
+        createAlternative: (root, args) => {
+            let newAlternative = new Alternative({
+                title: args.title,
+                sorting: args.sorting
+            });
+            newAlternative.save(function (err) {
+                if (err) console.log ('Error on Alternative save!');
+            });
+            return newAlternative;
+        },
+        deleteAlternative: (root, args) => {
+            Alternative.findOneAndRemove(args, function (err) {
+                if (err) console.log ('Error on Alternative deletion!');
+            });
+            return true;
+        },
     },
     Matrix: {
         categories(matrix) {
