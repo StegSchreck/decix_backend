@@ -3,43 +3,43 @@ import resolvers from './resolvers';
 
 const typeDefs = `
 type Query {
-  matrix(id: String, title: String): [Matrix]
-  category(id: String, title: String): [Category]
-  alternative(id: String, title: String): [Alternative]
-  entry(id: String, title: String): [Entry]
+  matrix(id: ID, title: String): [Matrix]
+  category(id: ID, title: String): [Category]
+  alternative(id: ID, title: String): [Alternative]
+  entry(id: ID, title: String): [Entry]
 }
 
 type Mutation {
   createMatrix(title: String): Matrix
-  deleteMatrix(id: String): Boolean
+  deleteMatrix(id: ID): Boolean
   createCategory(title: String, sorting: Int): Category
-  deleteCategory(id: String): Boolean
+  deleteCategory(id: ID): Boolean
   createAlternative(title: String, sorting: Int): Alternative
-  deleteAlternative(id: String): Boolean
+  deleteAlternative(id: ID): Boolean
 }
 
 type Matrix {
-  id: String
+  id: ID
   title: String
   categories: [Category]
   alternatives: [Alternative]
 }
 
 type Category {
-  id: String
+  id: ID
   title: String
   sorting: Int
   weight: Int
 }
 
 type Alternative {
-  id: String
+  id: ID
   title: String
   sorting: Int
 }
 
 type Entry {
-  id: String
+  id: ID
   value: String
   category: Category
   alternative: Alternative
