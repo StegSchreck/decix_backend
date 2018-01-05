@@ -34,12 +34,14 @@ const resolvers = {
             });
             newMatrix.save(function (err) {
                 if (err) console.log ('Error on Matrix save!');
+                return null;
             });
             return newMatrix;
         },
         deleteMatrix: (root, args) => {
-            Matrix.findOneAndRemove(args, function (err) {
+            Matrix.findByIdAndRemove(args.id, function (err) {
                 if (err) console.log ('Error on Matrix deletion!');
+                return false;
             });
             return true;
         },
@@ -50,12 +52,14 @@ const resolvers = {
             });
             newCategory.save(function (err) {
                 if (err) console.log ('Error on Category save!');
+                return null;
             });
             return newCategory;
         },
         deleteCategory: (root, args) => {
-            Category.findOneAndRemove(args, function (err) {
+            Category.findByIdAndRemove(args.id, function (err) {
                 if (err) console.log ('Error on Category deletion!');
+                return false;
             });
             return true;
         },
@@ -66,12 +70,14 @@ const resolvers = {
             });
             newAlternative.save(function (err) {
                 if (err) console.log ('Error on Alternative save!');
+                return null;
             });
             return newAlternative;
         },
         deleteAlternative: (root, args) => {
-            Alternative.findOneAndRemove(args, function (err) {
+            Alternative.findByIdAndRemove(args.id, function (err) {
                 if (err) console.log ('Error on Alternative deletion!');
+                return false;
             });
             return true;
         },
