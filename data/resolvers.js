@@ -1,4 +1,9 @@
 import { Matrix, Category, Alternative, Entry } from './connectors';
+import { PubSub, withFilter } from 'graphql-subscriptions';
+
+const pubsub = new PubSub();
+
+const MATRIX_CHANGED_TOPIC = 'matrix_changed';
 
 const resolvers = {
     Query: {
@@ -81,6 +86,14 @@ const resolvers = {
             });
             return true;
         },
+    },
+    Subscription: {
+        matrixAdded: {
+            subscribe: withFilter(
+                () => pubsub.asyncIterator(MATRIX_CHANGED_TOPIC),
+                (payload, variables) => payload.matrixAdded.title === variables.title,
+            ),
+        }
     },
     Matrix: {
         categories(matrix) {

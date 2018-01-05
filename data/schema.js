@@ -18,6 +18,10 @@ type Mutation {
   deleteAlternative(id: ID): Boolean
 }
 
+type Subscription {
+  matrixAdded(title: String): Matrix
+}
+
 type Matrix {
   id: ID
   title: String
