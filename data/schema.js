@@ -3,10 +3,10 @@ import resolvers from './resolvers';
 
 const typeDefs = `
 type Query {
-  matrix(title: String): [Matrix]
-  category(title: String): [Category]
-  alternative(title: String): [Alternative]
-  entry(title: String): [Entry]
+  matrix(id: String, title: String): [Matrix]
+  category(id: String, title: String): [Category]
+  alternative(id: String, title: String): [Alternative]
+  entry(id: String, title: String): [Entry]
 }
 
 type Mutation {

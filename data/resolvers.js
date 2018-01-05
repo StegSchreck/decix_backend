@@ -3,15 +3,27 @@ import { Matrix, Category, Alternative, Entry } from './connectors';
 const resolvers = {
     Query: {
         matrix(root, args) {
+            if (args.id !== undefined) {
+                return [Matrix.findById(args.id)];
+            }
             return Matrix.find(args);
         },
         category(root, args) {
+            if (args.id !== undefined) {
+                return [Category.findById(args.id)];
+            }
             return Category.find(args);
         },
         alternative(root, args) {
+            if (args.id !== undefined) {
+                return [Alternative.findById(args.id)];
+            }
             return Alternative.find(args);
         },
         entry(root, args) {
+            if (args.id !== undefined) {
+                return [Entry.findById(args.id)];
+            }
             return Entry.find(args);
         }
     },
