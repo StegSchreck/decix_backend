@@ -41,6 +41,7 @@ const resolvers = {
                 if (err) console.log ('Error on Matrix save!');
                 return null;
             });
+            pubsub.publish(MATRIX_CHANGED_TOPIC, { matrixAdded: newMatrix });
             return newMatrix;
         },
         deleteMatrix: (root, args) => {
@@ -89,10 +90,7 @@ const resolvers = {
     },
     Subscription: {
         matrixAdded: {
-            subscribe: withFilter(
-                () => pubsub.asyncIterator(MATRIX_CHANGED_TOPIC),
-                (payload, variables) => payload.matrixAdded.title === variables.title,
-            ),
+            subscribe: () => pubsub.asyncIterator(MATRIX_CHANGED_TOPIC)
         }
     },
     Matrix: {
