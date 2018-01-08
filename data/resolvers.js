@@ -1,5 +1,5 @@
 import { Matrix, Category, Alternative, Entry } from './connectors';
-import { PubSub, withFilter } from 'graphql-subscriptions';
+import { PubSub } from 'graphql-subscriptions';
 
 const pubsub = new PubSub();
 
@@ -40,14 +40,21 @@ const resolvers = {
             newMatrix.save(function (err) {
                 if (err) console.log ('Error on Matrix save!');
                 return null;
+            }).then(function () {
+                    Matrix.find({}, function (err, items) {
+                        pubsub.publish(MATRIX_CHANGED_TOPIC, { matrixChange: items });
+                    })
             });
-            pubsub.publish(MATRIX_CHANGED_TOPIC, { matrixAdded: newMatrix });
             return newMatrix;
         },
         deleteMatrix: (root, args) => {
             Matrix.findByIdAndRemove(args.id, function (err) {
                 if (err) console.log ('Error on Matrix deletion!');
                 return false;
+            }).then(function () {
+                Matrix.find({}, function (err, items) {
+                    pubsub.publish(MATRIX_CHANGED_TOPIC, { matrixChange: items });
+                })
             });
             return true;
         },
@@ -89,7 +96,7 @@ const resolvers = {
         },
     },
     Subscription: {
-        matrixAdded: {
+        matrixChange: {
             subscribe: () => pubsub.asyncIterator(MATRIX_CHANGED_TOPIC)
         }
     },

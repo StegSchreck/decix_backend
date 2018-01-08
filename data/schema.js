@@ -19,7 +19,7 @@ type Mutation {
 }
 
 type Subscription {
-  matrixAdded: Matrix
+  matrixChange: [Matrix]
 }
 
 type Matrix {
