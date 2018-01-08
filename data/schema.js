@@ -20,6 +20,8 @@ type Mutation {
 
 type Subscription {
   matrixChange: [Matrix]
+  categoryChange: [Category]
+  alternativeChange: [Alternative]
 }
 
 type Matrix {

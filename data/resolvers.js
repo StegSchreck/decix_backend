@@ -4,6 +4,8 @@ import { PubSub } from 'graphql-subscriptions';
 const pubsub = new PubSub();
 
 const MATRIX_CHANGED_TOPIC = 'matrix_changed';
+const ALTERNATIVE_CHANGED_TOPIC = 'alternative_changed';
+const CATEGORY_CHANGED_TOPIC = 'category_changed';
 
 const resolvers = {
     Query: {
@@ -66,6 +68,10 @@ const resolvers = {
             newCategory.save(function (err) {
                 if (err) console.log ('Error on Category save!');
                 return null;
+            }).then(function () {
+                Category.find({}, function (err, items) {
+                    pubsub.publish(CATEGORY_CHANGED_TOPIC, { categoryChange: items });
+                })
             });
             return newCategory;
         },
@@ -73,6 +79,10 @@ const resolvers = {
             Category.findByIdAndRemove(args.id, function (err) {
                 if (err) console.log ('Error on Category deletion!');
                 return false;
+            }).then(function () {
+                Category.find({}, function (err, items) {
+                    pubsub.publish(CATEGORY_CHANGED_TOPIC, { categoryChange: items });
+                })
             });
             return true;
         },
@@ -84,6 +94,10 @@ const resolvers = {
             newAlternative.save(function (err) {
                 if (err) console.log ('Error on Alternative save!');
                 return null;
+            }).then(function () {
+                Alternative.find({}, function (err, items) {
+                    pubsub.publish(ALTERNATIVE_CHANGED_TOPIC, { alternativeChange: items });
+                })
             });
             return newAlternative;
         },
@@ -91,6 +105,10 @@ const resolvers = {
             Alternative.findByIdAndRemove(args.id, function (err) {
                 if (err) console.log ('Error on Alternative deletion!');
                 return false;
+            }).then(function () {
+                Alternative.find({}, function (err, items) {
+                    pubsub.publish(ALTERNATIVE_CHANGED_TOPIC, { alternativeChange: items });
+                })
             });
             return true;
         },
@@ -98,6 +116,12 @@ const resolvers = {
     Subscription: {
         matrixChange: {
             subscribe: () => pubsub.asyncIterator(MATRIX_CHANGED_TOPIC)
+        },
+        categoryChange: {
+            subscribe: () => pubsub.asyncIterator(CATEGORY_CHANGED_TOPIC)
+        },
+        alternativeChange: {
+            subscribe: () => pubsub.asyncIterator(ALTERNATIVE_CHANGED_TOPIC)
         }
     },
     Matrix: {
