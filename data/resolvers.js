@@ -133,8 +133,14 @@ const resolvers = {
         }
     },
     Category: {
+        entries(category) {
+            return category.entries;
+        }
     },
     Alternative: {
+        entries(alternative) {
+            return alternative.entries;
+        }
     },
     Entry: {
         category(entry) {

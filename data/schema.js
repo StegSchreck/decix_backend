@@ -36,12 +36,14 @@ type Category {
   title: String
   sorting: Int
   weight: Int
+  entries: [Entry]
 }
 
 type Alternative {
   id: ID
   title: String
   sorting: Int
+  entries: [Entry]
 }
 
 type Entry {

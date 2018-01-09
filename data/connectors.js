@@ -20,6 +20,7 @@ const CategorySchema = Schema({
     title: String,
     sorting: { type: Number, index: { unique: true } },
     weight: { type: Number, default: 0 },
+    entries: [{ type: Schema.ObjectId, ref: 'Entry' }],
     creationDate: { type: Date, default: Date.now },
 });
 
@@ -28,6 +29,7 @@ const Category = mongoose.model('Category', CategorySchema);
 const AlternativeSchema = Schema({
     title: String,
     sorting: { type: Number, index: { unique: true } },
+    entries: [{ type: Schema.ObjectId, ref: 'Entry' }],
     creationDate: { type: Date, default: Date.now },
 });
 
