@@ -21,6 +21,7 @@ const CategorySchema = Schema({
     sorting: { type: Number, index: { unique: true } },
     weight: { type: Number, default: 0 },
     entries: [{ type: Schema.ObjectId, ref: 'Entry' }],
+    matrix: { type: Schema.ObjectId, ref: 'Matrix' },
     creationDate: { type: Date, default: Date.now },
 });
 
@@ -30,6 +31,7 @@ const AlternativeSchema = Schema({
     title: String,
     sorting: { type: Number, index: { unique: true } },
     entries: [{ type: Schema.ObjectId, ref: 'Entry' }],
+    matrix: { type: Schema.ObjectId, ref: 'Matrix' },
     creationDate: { type: Date, default: Date.now },
 });
 

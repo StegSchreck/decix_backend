@@ -135,11 +135,17 @@ const resolvers = {
     Category: {
         entries(category) {
             return category.entries;
+        },
+        matrix(alternative) {
+            return alternative.matrix;
         }
     },
     Alternative: {
         entries(alternative) {
             return alternative.entries;
+        },
+        matrix(alternative) {
+            return alternative.matrix;
         }
     },
     Entry: {

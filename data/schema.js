@@ -37,6 +37,7 @@ type Category {
   sorting: Int
   weight: Int
   entries: [Entry]
+  matrix: Matrix
 }
 
 type Alternative {
@@ -44,6 +45,7 @@ type Alternative {
   title: String
   sorting: Int
   entries: [Entry]
+  matrix: Matrix
 }
 
 type Entry {
