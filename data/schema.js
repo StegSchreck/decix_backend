@@ -27,6 +27,7 @@ type Subscription {
 type Matrix {
   id: ID
   title: String
+  description: String
   categories: [Category]
   alternatives: [Alternative]
 }
@@ -34,6 +35,7 @@ type Matrix {
 type Category {
   id: ID
   title: String
+  description: String
   sorting: Int
   weight: Int
   entries: [Entry]
@@ -43,6 +45,7 @@ type Category {
 type Alternative {
   id: ID
   title: String
+  description: String
   sorting: Int
   entries: [Entry]
   matrix: Matrix
@@ -51,6 +54,7 @@ type Alternative {
 type Entry {
   id: ID
   value: String
+  comment: String
   category: Category
   alternative: Alternative
 }
