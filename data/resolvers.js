@@ -11,27 +11,27 @@ const resolvers = {
     Query: {
         matrix(root, args) {
             if (args.id !== undefined) {
-                return [Matrix.findById(args.id)];
+                return [Matrix.findById(args.id).populate('categories').populate('alternatives')];
             }
-            return Matrix.find(args);
+            return Matrix.find(args).populate('categories').populate('alternatives');
         },
         category(root, args) {
             if (args.id !== undefined) {
-                return [Category.findById(args.id)];
+                return [Category.findById(args.id).populate('matrix')];
             }
-            return Category.find(args);
+            return Category.find(args).populate('matrix');
         },
         alternative(root, args) {
             if (args.id !== undefined) {
-                return [Alternative.findById(args.id)];
+                return [Alternative.findById(args.id).populate('matrix')];
             }
-            return Alternative.find(args);
+            return Alternative.find(args).populate('matrix');
         },
         entry(root, args) {
             if (args.id !== undefined) {
-                return [Entry.findById(args.id)];
+                return [Entry.findById(args.id).populate('category').populate('alternative')];
             }
-            return Entry.find(args);
+            return Entry.find(args).populate('category').populate('alternative');
         }
     },
     Mutation: {
@@ -43,9 +43,9 @@ const resolvers = {
                 if (err) console.log ('Error on Matrix save!');
                 return null;
             }).then(function () {
-                    Matrix.find({}, function (err, items) {
-                        pubsub.publish(MATRIX_CHANGED_TOPIC, { matrixChange: items });
-                    })
+                Matrix.find({}, function (err, items) {
+                    pubsub.publish(MATRIX_CHANGED_TOPIC, { matrixChange: items });
+                })
             });
             return newMatrix;
         },
