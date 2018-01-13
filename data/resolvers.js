@@ -98,19 +98,29 @@ const resolvers = {
             return true;
         },
         createAlternative: (root, args) => {
-            let newAlternative = new Alternative({
-                title: args.title,
-                sorting: args.sorting
-            });
-            newAlternative.save(function (err) {
-                if (err) console.log ('Error on Alternative save!');
-                return null;
+            let newAlternative = null;
+            let alternativeMatrix = null;
+            Matrix.findById(args.matrixID, function (err, matrix) {
+                alternativeMatrix = matrix;
             }).then(function () {
-                Alternative.find({}, function (err, items) {
-                    pubsub.publish(ALTERNATIVE_CHANGED_TOPIC, { alternativeChange: items });
-                })
+                newAlternative = new Alternative({
+                    title: args.title,
+                    sorting: args.sorting,
+                    matrix: Types.ObjectId(alternativeMatrix._id)
+                });
+                newAlternative.save(function (err) {
+                    if (err) console.log ('Error on Alternative save!');
+                }).then(function () {
+                    alternativeMatrix.alternatives.push(Types.ObjectId(newAlternative._id));
+                    alternativeMatrix.save(function(err) {
+                        if (err) console.log('Error on saving alternative at matrix\n' + err);
+                    });
+                    Alternative.find({}, function (err, items) {
+                        pubsub.publish(ALTERNATIVE_CHANGED_TOPIC, { alternativeChange: items });
+                    })
+                });
+                return newAlternative;
             });
-            return newAlternative;
         },
         deleteAlternative: (root, args) => {
             Alternative.findByIdAndRemove(args.id, function (err) {

@@ -14,7 +14,7 @@ type Mutation {
   deleteMatrix(id: ID): Boolean
   createCategory(title: String, sorting: Int, matrixID: ID): Category
   deleteCategory(id: ID): Boolean
-  createAlternative(title: String, sorting: Int): Alternative
+  createAlternative(title: String, sorting: Int, matrixID: ID): Alternative
   deleteAlternative(id: ID): Boolean
 }
 
