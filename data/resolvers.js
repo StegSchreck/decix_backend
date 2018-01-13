@@ -1,5 +1,6 @@
 import { Matrix, Category, Alternative, Entry } from './connectors';
 import { PubSub } from 'graphql-subscriptions';
+import { Types } from "mongoose";
 
 const pubsub = new PubSub();
 
@@ -61,19 +62,29 @@ const resolvers = {
             return true;
         },
         createCategory: (root, args) => {
-            let newCategory = new Category({
-                title: args.title,
-                sorting: args.sorting
-            });
-            newCategory.save(function (err) {
-                if (err) console.log ('Error on Category save!');
-                return null;
+            let newCategory = null;
+            let categoryMatrix = null;
+            Matrix.findById(args.matrixID, function (err, matrix) {
+                categoryMatrix = matrix;
             }).then(function () {
-                Category.find({}, function (err, items) {
-                    pubsub.publish(CATEGORY_CHANGED_TOPIC, { categoryChange: items });
-                })
+                newCategory = new Category({
+                    title: args.title,
+                    sorting: args.sorting,
+                    matrix: Types.ObjectId(categoryMatrix._id)
+                });
+                newCategory.save(function (err) {
+                    if (err) console.log ('Error on Category save!');
+                }).then(function () {
+                    categoryMatrix.categories.push(Types.ObjectId(newCategory._id));
+                    categoryMatrix.save(function(err) {
+                        if (err) console.log('Error on saving category at matrix\n' + err);
+                    });
+                    Category.find({}, function (err, items) {
+                        pubsub.publish(CATEGORY_CHANGED_TOPIC, { categoryChange: items });
+                    })
+                });
+                return newCategory;
             });
-            return newCategory;
         },
         deleteCategory: (root, args) => {
             Category.findByIdAndRemove(args.id, function (err) {
