@@ -1,5 +1,5 @@
 import { Matrix, Category, Alternative, Entry } from './connectors';
-import { PubSub } from 'graphql-subscriptions';
+import { PubSub, withFilter } from 'graphql-subscriptions';
 import { Types } from "mongoose";
 
 const pubsub = new PubSub();
@@ -45,7 +45,7 @@ const resolvers = {
                 return null;
             }).then(function () {
                 Matrix.find({}, function (err, items) {
-                    pubsub.publish(MATRIX_CHANGED_TOPIC, { matrixChange: items });
+                    pubsub.publish(MATRIX_CHANGED_TOPIC, { matrixesChange: items });
                 })
             });
             return newMatrix;
@@ -56,7 +56,7 @@ const resolvers = {
                 return false;
             }).then(function () {
                 Matrix.find({}, function (err, items) {
-                    pubsub.publish(MATRIX_CHANGED_TOPIC, { matrixChange: items });
+                    pubsub.publish(MATRIX_CHANGED_TOPIC, { matrixesChange: items });
                 })
             });
             return true;
@@ -64,7 +64,7 @@ const resolvers = {
         createCategory: (root, args) => {
             let newCategory = null;
             let categoryMatrix = null;
-            Matrix.findById(args.matrixID, function (err, matrix) {
+            return Matrix.findById(args.matrixID, function (err, matrix) {
                 categoryMatrix = matrix;
             }).then(function () {
                 newCategory = new Category({
@@ -80,7 +80,13 @@ const resolvers = {
                         if (err) console.log('Error on saving category at matrix\n' + err);
                     });
                     Category.find({}, function (err, items) {
-                        pubsub.publish(CATEGORY_CHANGED_TOPIC, { categoryChange: items });
+                        pubsub.publish(CATEGORY_CHANGED_TOPIC, { categoriesChange: items });
+                        Matrix.findById(args.matrixID).populate('categories').populate('alternatives').exec(
+                            function (err, matrix) {
+                                if (err) return console.log(err);
+                                pubsub.publish(MATRIX_CHANGED_TOPIC, { matrixChange: [matrix] });
+                            }
+                        )
                     })
                 });
                 return newCategory;
@@ -92,7 +98,7 @@ const resolvers = {
                 return false;
             }).then(function () {
                 Category.find({}, function (err, items) {
-                    pubsub.publish(CATEGORY_CHANGED_TOPIC, { categoryChange: items });
+                    pubsub.publish(CATEGORY_CHANGED_TOPIC, { categoriesChange: items });
                 })
             });
             return true;
@@ -116,7 +122,7 @@ const resolvers = {
                         if (err) console.log('Error on saving alternative at matrix\n' + err);
                     });
                     Alternative.find({}, function (err, items) {
-                        pubsub.publish(ALTERNATIVE_CHANGED_TOPIC, { alternativeChange: items });
+                        pubsub.publish(ALTERNATIVE_CHANGED_TOPIC, { alternativesChange: items });
                     })
                 });
                 return newAlternative;
@@ -128,20 +134,26 @@ const resolvers = {
                 return false;
             }).then(function () {
                 Alternative.find({}, function (err, items) {
-                    pubsub.publish(ALTERNATIVE_CHANGED_TOPIC, { alternativeChange: items });
+                    pubsub.publish(ALTERNATIVE_CHANGED_TOPIC, { alternativesChange: items });
                 })
             });
             return true;
         },
     },
     Subscription: {
-        matrixChange: {
+        matrixesChange: {
             subscribe: () => pubsub.asyncIterator(MATRIX_CHANGED_TOPIC)
         },
-        categoryChange: {
+        matrixChange: {
+            subscribe: withFilter(
+                () => pubsub.asyncIterator(MATRIX_CHANGED_TOPIC),
+                (payload, variables) => payload.matrixChange[0]._id.toString() === variables.id.toString()
+            )
+        },
+        categoriesChange: {
             subscribe: () => pubsub.asyncIterator(CATEGORY_CHANGED_TOPIC)
         },
-        alternativeChange: {
+        alternativesChange: {
             subscribe: () => pubsub.asyncIterator(ALTERNATIVE_CHANGED_TOPIC)
         }
     },

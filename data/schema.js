@@ -19,9 +19,10 @@ type Mutation {
 }
 
 type Subscription {
-  matrixChange: [Matrix]
-  categoryChange: [Category]
-  alternativeChange: [Alternative]
+  matrixesChange: [Matrix]
+  matrixChange(id: ID): [Matrix]
+  categoriesChange: [Category]
+  alternativesChange: [Alternative]
 }
 
 type Matrix {
