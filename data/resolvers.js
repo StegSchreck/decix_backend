@@ -106,7 +106,7 @@ const resolvers = {
         createAlternative: (root, args) => {
             let newAlternative = null;
             let alternativeMatrix = null;
-            Matrix.findById(args.matrixID, function (err, matrix) {
+            return Matrix.findById(args.matrixID, function (err, matrix) {
                 alternativeMatrix = matrix;
             }).then(function () {
                 newAlternative = new Alternative({
@@ -123,6 +123,12 @@ const resolvers = {
                     });
                     Alternative.find({}, function (err, items) {
                         pubsub.publish(ALTERNATIVE_CHANGED_TOPIC, { alternativesChange: items });
+                        Matrix.findById(args.matrixID).populate('categories').populate('alternatives').exec(
+                            function (err, matrix) {
+                                if (err) return console.log(err);
+                                pubsub.publish(MATRIX_CHANGED_TOPIC, { matrixChange: [matrix] });
+                            }
+                        )
                     })
                 });
                 return newAlternative;
