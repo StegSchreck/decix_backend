@@ -7,6 +7,7 @@ const pubsub = new PubSub();
 const MATRIX_CHANGED_TOPIC = 'matrix_changed';
 const ALTERNATIVE_CHANGED_TOPIC = 'alternative_changed';
 const CATEGORY_CHANGED_TOPIC = 'category_changed';
+const ENTRY_CHANGED_TOPIC = 'entry_changed';
 
 const resolvers = {
     Query: {
@@ -148,6 +149,74 @@ const resolvers = {
             });
             return true;
         },
+        createEntry: (root, args) => {
+            let newEntry = null;
+            let entryCategory = null;
+            let entryAlternative = null;
+            return Category.findById(args.categoryID, function (err, category) {
+                entryCategory = category;
+            }).then(function () {
+                return Alternative.findById(args.alternativeID, function (err, alternative) {
+                    entryAlternative = alternative;
+                }).then(function () {
+                    newEntry = new Entry({
+                        value: args.value,
+                        comment: args.comment,
+                        category: Types.ObjectId(entryCategory._id),
+                        alternative: Types.ObjectId(entryAlternative._id)
+                    });
+                    newEntry.save(function (err) {
+                        if (err) console.error('Error on Alternative save!');
+                    }).then(function () {
+                        entryAlternative.entries.push(Types.ObjectId(newEntry._id));
+                        entryAlternative.save(function(err) {
+                            if (err) console.error('Error on saving entry at alternative\n' + err);
+                        });
+                        Entry.find({}, function (err, items) {
+                            pubsub.publish(ENTRY_CHANGED_TOPIC, { entriesChange: items });
+                            Alternative.findById(args.alternativeID).populate('entries').exec(
+                                function (err, alternative) {
+                                    if (err) return console.error(err);
+                                    pubsub.publish(ALTERNATIVE_CHANGED_TOPIC, { alternativesChange: [alternative] });
+                                }
+                            )
+                        });
+                        entryCategory.entries.push(Types.ObjectId(newEntry._id));
+                        entryCategory.save(function(err) {
+                            if (err) console.error('Error on saving entry at category\n' + err);
+                        });
+                        Entry.find({}, function (err, items) {
+                            pubsub.publish(ENTRY_CHANGED_TOPIC, { entriesChange: items });
+                            Category.findById(args.categoryID).populate('entries').exec(
+                                function (err, category) {
+                                    if (err) return console.error(err);
+                                    pubsub.publish(CATEGORY_CHANGED_TOPIC, { categoriesChange: [category] });
+                                }
+                            )
+                        })
+                    });
+                    return newEntry;
+                });
+            });
+        },
+        deleteEntry: (root, args) => {
+            Entry.findByIdAndRemove(args.id, function (err) {
+                if (err) console.error('Error on Entry deletion!');
+                return false;
+            }).then(function () {
+                Entry.find({}, function (err, items) {
+                    pubsub.publish(ENTRY_CHANGED_TOPIC, { entriesChange: items });
+                })
+            });
+            return true;
+        },
+        deleteAllEntries: (root, args) => {
+            Entry.findOneAndRemove({}, function (err) {
+                if (err) console.error('Error on Entry deletion!');
+                return false;
+            });
+            return true;
+        },
     },
     Subscription: {
         matrixesChange: {
@@ -164,6 +233,9 @@ const resolvers = {
         },
         alternativesChange: {
             subscribe: () => pubsub.asyncIterator(ALTERNATIVE_CHANGED_TOPIC)
+        },
+        entriesChange: {
+            subscribe: () => pubsub.asyncIterator(ENTRY_CHANGED_TOPIC)
         }
     },
     Matrix: {

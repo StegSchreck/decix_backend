@@ -16,6 +16,9 @@ type Mutation {
   deleteCategory(id: ID): Boolean
   createAlternative(title: String, description: String, sorting: Int, matrixID: ID): Alternative
   deleteAlternative(id: ID): Boolean
+  createEntry(value: String, comment: String, categoryID: ID, alternativeID: ID): Entry
+  deleteEntry(id: ID): Boolean
+  deleteAllEntries: Boolean
 }
 
 type Subscription {
@@ -23,6 +26,7 @@ type Subscription {
   matrixChange(id: ID): [Matrix]
   categoriesChange: [Category]
   alternativesChange: [Alternative]
+  entriesChange: [Entry]
 }
 
 type Matrix {
