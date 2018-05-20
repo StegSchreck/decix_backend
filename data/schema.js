@@ -12,7 +12,7 @@ type Query {
 type Mutation {
   createMatrix(title: String): Matrix
   deleteMatrix(id: ID): Boolean
-  createCategory(title: String, sorting: Int, matrixID: ID): Category
+  createCategory(title: String, description: String, sorting: Int, weight: Int, matrixID: ID): Category
   deleteCategory(id: ID): Boolean
   createAlternative(title: String, sorting: Int, matrixID: ID): Alternative
   deleteAlternative(id: ID): Boolean

@@ -69,7 +69,9 @@ const resolvers = {
             }).then(function () {
                 newCategory = new Category({
                     title: args.title,
+                    description: args.description,
                     sorting: args.sorting,
+                    weight: args.weight,
                     matrix: Types.ObjectId(categoryMatrix._id)
                 });
                 newCategory.save(function (err) {
