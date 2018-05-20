@@ -41,7 +41,7 @@ const resolvers = {
                 title: args.title
             });
             newMatrix.save(function (err) {
-                if (err) console.log ('Error on Matrix save!');
+                if (err) console.error('Error on Matrix save!');
                 return null;
             }).then(function () {
                 Matrix.find({}, function (err, items) {
@@ -52,7 +52,7 @@ const resolvers = {
         },
         deleteMatrix: (root, args) => {
             Matrix.findByIdAndRemove(args.id, function (err) {
-                if (err) console.log ('Error on Matrix deletion!');
+                if (err) console.error('Error on Matrix deletion!');
                 return false;
             }).then(function () {
                 Matrix.find({}, function (err, items) {
@@ -75,17 +75,17 @@ const resolvers = {
                     matrix: Types.ObjectId(categoryMatrix._id)
                 });
                 newCategory.save(function (err) {
-                    if (err) console.log ('Error on Category save!');
+                    if (err) console.error('Error on Category save!');
                 }).then(function () {
                     categoryMatrix.categories.push(Types.ObjectId(newCategory._id));
                     categoryMatrix.save(function(err) {
-                        if (err) console.log('Error on saving category at matrix\n' + err);
+                        if (err) console.error('Error on saving category at matrix\n' + err);
                     });
                     Category.find({}, function (err, items) {
                         pubsub.publish(CATEGORY_CHANGED_TOPIC, { categoriesChange: items });
                         Matrix.findById(args.matrixID).populate('categories').populate('alternatives').exec(
                             function (err, matrix) {
-                                if (err) return console.log(err);
+                                if (err) return console.error(err);
                                 pubsub.publish(MATRIX_CHANGED_TOPIC, { matrixChange: [matrix] });
                             }
                         )
@@ -96,7 +96,7 @@ const resolvers = {
         },
         deleteCategory: (root, args) => {
             Category.findByIdAndRemove(args.id, function (err) {
-                if (err) console.log ('Error on Category deletion!');
+                if (err) console.error('Error on Category deletion!');
                 return false;
             }).then(function () {
                 Category.find({}, function (err, items) {
@@ -118,17 +118,17 @@ const resolvers = {
                     matrix: Types.ObjectId(alternativeMatrix._id)
                 });
                 newAlternative.save(function (err) {
-                    if (err) console.log ('Error on Alternative save!');
+                    if (err) console.error('Error on Alternative save!');
                 }).then(function () {
                     alternativeMatrix.alternatives.push(Types.ObjectId(newAlternative._id));
                     alternativeMatrix.save(function(err) {
-                        if (err) console.log('Error on saving alternative at matrix\n' + err);
+                        if (err) console.error('Error on saving alternative at matrix\n' + err);
                     });
                     Alternative.find({}, function (err, items) {
                         pubsub.publish(ALTERNATIVE_CHANGED_TOPIC, { alternativesChange: items });
                         Matrix.findById(args.matrixID).populate('categories').populate('alternatives').exec(
                             function (err, matrix) {
-                                if (err) return console.log(err);
+                                if (err) return console.error(err);
                                 pubsub.publish(MATRIX_CHANGED_TOPIC, { matrixChange: [matrix] });
                             }
                         )
@@ -139,7 +139,7 @@ const resolvers = {
         },
         deleteAlternative: (root, args) => {
             Alternative.findByIdAndRemove(args.id, function (err) {
-                if (err) console.log ('Error on Alternative deletion!');
+                if (err) console.error('Error on Alternative deletion!');
                 return false;
             }).then(function () {
                 Alternative.find({}, function (err, items) {
