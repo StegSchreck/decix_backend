@@ -113,6 +113,7 @@ const resolvers = {
             }).then(function () {
                 newAlternative = new Alternative({
                     title: args.title,
+                    description: args.description,
                     sorting: args.sorting,
                     matrix: Types.ObjectId(alternativeMatrix._id)
                 });
